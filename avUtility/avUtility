@@ -1,0 +1,10 @@
+#ifndef AVUTILITY
+#define AVUTILITY
+
+    #include "ffDictionary.h"
+    #include "ffRational.h"
+    #include "ffTimeStamp.h"
+    #include "ffUtil.h"
+
+#endif // AVUTILITY
+
