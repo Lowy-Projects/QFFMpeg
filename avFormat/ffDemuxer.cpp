@@ -1,6 +1,9 @@
 #include "ffDemuxer.h"
 #include "ffStream.h"
+#include "ffAudioStream.h"
 #include "ffVideoStream.h"
+#include "ffSubtitleStream.h"
+#include "ffDataStream.h"
 #include "ffChapter.h"
 #include "avUtility/ffDictionary.h"
 
@@ -185,6 +188,18 @@ bool ffDemuxer::DetectStreams()
         switch (stream->codec->codec_type) {
         case AVMEDIA_TYPE_VIDEO:
             ff_stream = new ffVideoStream(stream, this);
+            break;
+
+        case AVMEDIA_TYPE_AUDIO:
+            ff_stream = new ffAudioStream(stream, this);
+            break;
+
+        case AVMEDIA_TYPE_SUBTITLE:
+            ff_stream = new ffSubtitleStream(stream, this);
+            break;
+
+        case AVMEDIA_TYPE_DATA:
+            ff_stream = new ffDataStream(stream, this);
             break;
 
         default:
