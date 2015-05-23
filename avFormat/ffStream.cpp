@@ -186,3 +186,24 @@ ffRational ffStream::PixelRatio()
 {
     return ffRational(&m_pAVStream->sample_aspect_ratio);
 }
+
+int ffStream::Channels()
+{
+    return m_pAVStream->codec->channels;
+}
+
+int ffStream::SampleRate()
+{
+    return m_pAVStream->codec->sample_rate;
+}
+
+int ffStream::BitDepth()
+{
+    return av_get_bytes_per_sample(m_pAVStream->codec->sample_fmt) * 8;
+}
+
+QString ffStream::SampleFormat()
+{
+   return ffSampleFormat::toString(m_pAVStream->codec->sample_fmt, true);
+}
+

@@ -53,6 +53,12 @@ public:
     ffRational                   PictureRatio();
     ffRational                   PixelRatio();
 
+    // Audio stream adatok
+    int                               Channels();
+    int                               SampleRate();
+    int                               BitDepth();
+    QString                     SampleFormat();                 // Minta formátum (bit mélység, lebegőpontos, planar)
+
 signals:
 
 public slots:
