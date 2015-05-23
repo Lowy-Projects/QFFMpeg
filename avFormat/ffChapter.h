@@ -36,7 +36,6 @@ signals:
 public slots:
 private:
     int                 m_ChapterId;
-//    ffRational        m_TimeBase;
     ffTimeStamp         m_Start;
     ffTimeStamp         m_End;
     ffDictionaryModel   m_Metadata;
