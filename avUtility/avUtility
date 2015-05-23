@@ -4,6 +4,7 @@
     #include "ffDictionary.h"
     #include "ffRational.h"
     #include "ffTimeStamp.h"
+    #include "ffSampleFormat.h"
     #include "ffUtil.h"
 
 #endif // AVUTILITY
