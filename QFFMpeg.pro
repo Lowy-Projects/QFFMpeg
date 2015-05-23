@@ -26,7 +26,11 @@ SOURCES += \
     avUtility/ffTimeStamp.cpp \
     avFormat/ffChapterModel.cpp \
     avFormat/ffVideoStream.cpp \
-    avUtility/ffUtil.cpp
+    avUtility/ffUtil.cpp \
+    avFormat/ffAudioStream.cpp \
+    avFormat/ffSubtitleStream.cpp \
+    avFormat/ffDataStream.cpp \
+    avUtility/ffSampleFormat.cpp
 
 HEADERS += \
         qffmpeg_global.h \
@@ -42,7 +46,12 @@ HEADERS += \
     avUtility/ffTimeStamp.h \
     avFormat/ffChapterModel.h \
     avFormat/ffVideoStream.h \
-    avUtility/ffUtil.h
+    avUtility/ffUtil.h \
+    avFormat/ffAudioStream.h \
+    avFormat/ffSubtitleStream.h \
+    ffDataStream.h \
+    avFormat/ffDataStream.h \
+    avUtility/ffSampleFormat.h
 
 unix {
     target.path = /usr/lib
@@ -206,4 +215,8 @@ LIBS += -lx264
 LIBS += -lz
 LIBS += -lvdpau
 LIBS += -lva
+
+DISTFILES += \
+    VerzióInfó.txt \
+    LICENSE
 

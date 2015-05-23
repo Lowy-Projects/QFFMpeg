@@ -1,0 +1,35 @@
+Aktuális verzió:
+
+    avFormat osztály
+        - avFormat.h Fejléc, a könyvtár osztályainak használatához alkalmazásokhoz.
+        - ffStream
+            - Alaptulajdonságok meghatározása az Audio és Video stream-ekre.
+            - Leszármazottai az ffAudioStream, ffVideoStream, ffSubtitleStream, ffDataStream.
+        - ffAudioStream (avFormat.h nem tartalmazza)
+            - Strem ffStream::MediaType és szöveges azonosítójának megadása.
+        - ffVideoStream (avFormat.h nem tartalmazza)
+            - Strem ffStream::MediaType és szöveges azonosítójának megadása.
+        - ffSubtitleStream (avFormat.h nem tartalmazza)
+            - Strem ffStream::MediaType és szöveges azonosítójának megadása.
+        - ffDataStream (avFormat.h nem tartalmazza)
+            - Strem ffStream::MediaType és szöveges azonosítójának megadása.
+        - ffChapter
+            - Egy fejezet adatainak tárolására szolgál.
+            - Kezdés, Befejezés, Hossz és fejezetnév lekérdezésére tagfögvényeket biztosít.
+              Habár ezen ulajdonságok módosításához is tartalmaz tagfügvényeket, ezek módosítását  az ffChapterModel-en keresztűl ajánlott elvégezni, hogy a megjelenés is frissűljön.
+        - ffChapterModel
+            - Model alapú fejezetkezelés, a megjelenítás és módosítás megkönnyítésére.
+            - Saját delegát fügvény, a fejezetnevek Szép, esztétikus módosításához.
+            - Hozzáfárást biztosít, a fejezet kezdetének és végének módosításához.
+            - Hozzáadhatunk és törőlhetünk fejezeteket.
+
+    avUtility könyvtár
+        - ffSampleFormat Audio minta formátumát írja le.
+          Az == és != operátorok létrehozva.
+        - ffDictionaryModel a név-érték párok kezelésére. Kompatibilis az ffMpeg megfelelőjével.
+            Később modosítandó lesz, túl bonyolult. Önmagának kellene a model-nek lennie.
+        - ffTimeStamp osztály az időbélyeg kezelésére.
+        - ffRational osztály a raciónális számok kezelésére.
+
+
+    - qffmpeg   Fejléc, a könyvtár összes osztályának használatához.
