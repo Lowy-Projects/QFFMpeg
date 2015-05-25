@@ -8,14 +8,89 @@ QT += core gui
 QT += widgets
 
 QMAKE_CXXFLAGS += -D__STDC_CONSTANT_MACROS
-#QMAKE_CFLAGS += -fPIC
 QMAKE_LFLAGS += -Wl,-Bsymbolic
 
-TARGET = QFfmpeg
+TARGET = QFFMpeg
 TEMPLATE = lib
+VERSION = 0.1.10
 
 DEFINES += QFFMPEG_LIBRARY
 
+unix {
+# ffmpeg és kódek könyvtárak
+        FFMPEG_LIB = /usr/local/lib
+        FFMPEG_INCLUDE = /usr/local/include
+        CODEC_LIB = /usr/local/lib
+        CODEC_INCLUDE = /usr/local/include
+
+# Telepítési beállítások
+    header_files.files = $$PWD/*.h
+    header_files.files += $$PWD/qffmpeg
+    header_files.path = /usr/include/QFFMpeg
+    INSTALLS += header_files
+
+    header_avFormat.files = $$PWD/avFormat/*.h
+    header_avFormat.files += $$PWD/avFormat/avFormat
+    header_avFormat.path = /usr/include/QFFMpeg/avFormat
+    INSTALLS += header_avFormat
+
+    header_avUtility.files = $$PWD/avUtility/*.h
+    header_avUtility.files += $$PWD/avUtility/avUtility
+    header_avUtility.path = /usr/include/QFFMpeg/avUtility
+    INSTALLS += header_avUtility
+
+    target.path = /usr/lib
+    INSTALLS += target
+
+}
+
+# ffmpeg könyvtárak
+FFMPEG_FILES = \
+        -lavformat \
+        -lavcodec  \
+        -lavdevice \
+        -lavfilter   \
+        -lavutil      \
+        -lpostproc \
+        -lswresample \
+        -lswscale
+
+FFMPEG_LIB_NAMES = \
+        $$FFMPEG_LIB/libavformat.a      \
+        $$FFMPEG_LIB/libavcodec.a        \
+        $$FFMPEG_LIB/libavdevice.a       \
+        $$FFMPEG_LIB/libavfilter.a          \
+        $$FFMPEG_LIB/libavutil.a            \
+        $$FFMPEG_LIB/libpostproc.a      \
+        $$FFMPEG_LIB/libswresample.a \
+        $$FFMPEG_LIB/libswscale.a
+
+
+#ffmpeg statikus kódekek
+CODEC_FILES = \
+        -lmp3lame \
+        -lfdk-aac     \
+        -lvpx
+
+CODEC_LIB_NAMES = \
+        $$CODEC_LIB/libmp3lame.a \
+        $$CODEC_LIB/libfdk-aac.a     \
+        $$CODEC_LIB/libvpx.a
+
+# ffmpeg shared kódekek
+LIBS += -lvorbis
+LIBS += -lvorbisenc
+LIBS += -lvorbisfile
+LIBS += -ltheora
+LIBS += -ltheoraenc
+LIBS += -ltheoradec
+LIBS += -lx264
+LIBS += -lx265
+LIBS += -lz
+LIBS += -lvdpau
+LIBS += -lva
+
+# QFFMpeg forráskódok
 SOURCES += \
     qffmpeg_base.cpp \
     avFormat/ffChapter.cpp \
@@ -49,14 +124,21 @@ HEADERS += \
     avUtility/ffUtil.h \
     avFormat/ffAudioStream.h \
     avFormat/ffSubtitleStream.h \
-    ffDataStream.h \
     avFormat/ffDataStream.h \
     avUtility/ffSampleFormat.h
 
-unix {
-    target.path = /usr/lib
-    INSTALLS += target
-}
+DISTFILES += \
+    VerzióInfó.txt \
+    LICENSE
+
+LIBS += -L$$FFMPEG_LIB
+LIBS += $$FFMPEG_FILES
+PRE_TARGETDEPS += $$FFMPEG_LIB_NAMES
+
+LIBS += -L$$CODEC_LIB
+LIBS += $$CODEC_FILES
+PRE_TARGETDEPS += $$CODEC_LIB_NAMES
+
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../build/LowyLib/Release -lLowyLib
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../build/LowyLib/Debug/ -lLowyLib
@@ -71,152 +153,113 @@ else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/..
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../build/LowyLib/Debug/LowyLib.lib
 else:unix:!macx: PRE_TARGETDEPS += $$PWD/../build/LowyLib/Debug/libLowyLib.a
 
-INCLUDEPATH += $$PWD/../../lib-ffmpeg/include
-DEPENDPATH += $$PWD/../../lib-ffmpeg/include
+#INCLUDEPATH += $$FFMPEG_INCLUDE
+#DEPENDPATH +=  $$FFMPEG_INCLUDE
+#INCLUDEPATH += $$CODEC_INCLUDE
+#DEPENDPATH +=  $$CODEC_INCLUDE
+
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../lib-ffmpeg/lib/release/ -lavformat
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../lib-ffmpeg/lib/debug/ -lavformat
-else:unix:!macx: LIBS += -L$$PWD/../../lib-ffmpeg/lib/ -lavformat
 
 win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/libavformat.a
 else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/libavformat.a
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/avformat.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/avformat.lib
-else:unix:!macx: PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/libavformat.a
 
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../lib-ffmpeg/lib/release/ -lavcodec
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../lib-ffmpeg/lib/debug/ -lavcodec
-else:unix:!macx: LIBS += -L$$PWD/../../lib-ffmpeg/lib/ -lavcodec
 
 
 win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/libavcodec.a
 else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/libavcodec.a
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/avcodec.lib
-else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/avcodec.lib
-else:unix:!macx: PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/libavcodec.a
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../lib-ffmpeg/lib/release/ -lavdevice
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../lib-ffmpeg/lib/debug/ -lavdevice
-else:unix:!macx: LIBS += -L$$PWD/../../lib-ffmpeg/lib/ -lavdevice
 
 win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/libavdevice.a
 else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/libavdevice.a
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/avdevice.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/avdevice.lib
-else:unix:!macx: PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/libavdevice.a
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../lib-ffmpeg/lib/release/ -lavfilter
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../lib-ffmpeg/lib/debug/ -lavfilter
-else:unix:!macx: LIBS += -L$$PWD/../../lib-ffmpeg/lib/ -lavfilter
 
 win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/libavfilter.a
 else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/libavfilter.a
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/avfilter.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/avfilter.lib
-else:unix:!macx: PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/libavfilter.a
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../lib-ffmpeg/lib/release/ -lavutil
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../lib-ffmpeg/lib/debug/ -lavutil
-else:unix:!macx: LIBS += -L$$PWD/../../lib-ffmpeg/lib/ -lavutil
 
 win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/libavutil.a
 else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/libavutil.a
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/avutil.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/avutil.lib
-else:unix:!macx: PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/libavutil.a
 
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../lib-ffmpeg/lib/release/ -lfdk-aac
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../lib-ffmpeg/lib/debug/ -lfdk-aac
-else:unix:!macx: LIBS += -L$$PWD/../../lib-ffmpeg/lib/ -lfdk-aac
-
 
 win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/libfdk-aac.a
 else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/libfdk-aac.a
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/fdk-aac.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/fdk-aac.lib
-else:unix:!macx: PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/libfdk-aac.a
+
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../lib-ffmpeg/lib/release/ -lmp3lame
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../lib-ffmpeg/lib/debug/ -lmp3lame
-else:unix:!macx: LIBS += -L$$PWD/../../lib-ffmpeg/lib/ -lmp3lame
 
 win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/libmp3lame.a
 else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/libmp3lame.a
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/mp3lame.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/mp3lame.lib
-else:unix:!macx: PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/libmp3lame.a
+
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../lib-ffmpeg/lib/release/ -lpostproc
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../lib-ffmpeg/lib/debug/ -lpostproc
-else:unix:!macx: LIBS += -L$$PWD/../../lib-ffmpeg/lib/ -lpostproc
-
 
 win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/libpostproc.a
 else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/libpostproc.a
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/postproc.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/postproc.lib
-else:unix:!macx: PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/libpostproc.a
+
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../lib-ffmpeg/lib/release/ -lswresample
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../lib-ffmpeg/lib/debug/ -lswresample
-else:unix:!macx: LIBS += -L$$PWD/../../lib-ffmpeg/lib/ -lswresample
-
 
 win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/libswresample.a
 else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/libswresample.a
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/swresample.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/swresample.lib
-else:unix:!macx: PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/libswresample.a
+
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../lib-ffmpeg/lib/release/ -lswscale
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../lib-ffmpeg/lib/debug/ -lswscale
-else:unix:!macx: LIBS += -L$$PWD/../../lib-ffmpeg/lib/ -lswscale
-
 
 win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/libswscale.a
 else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/libswscale.a
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/swscale.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/swscale.lib
-else:unix:!macx: PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/libswscale.a
+
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../lib-ffmpeg/lib/release/ -lvpx
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../lib-ffmpeg/lib/debug/ -lvpx
-else:unix:!macx: LIBS += -L$$PWD/../../lib-ffmpeg/lib/ -lvpx
-
 
 win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/libvpx.a
 else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/libvpx.a
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/vpx.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/vpx.lib
-else:unix:!macx: PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/libvpx.a
+
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../lib-ffmpeg/lib/release/ -lx265
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../lib-ffmpeg/lib/debug/ -lx265
-else:unix: LIBS += -L$$PWD/../../lib-ffmpeg/lib/ -lx265
-
-INCLUDEPATH += $$PWD/../../lib-ffmpeg/include
-DEPENDPATH += $$PWD/../../lib-ffmpeg/include
 
 win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/libx265.a
 else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/libx265.a
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/x265.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/x265.lib
-else:unix: PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/libx265.a
-
-LIBS += -lvorbis
-LIBS += -lvorbisenc
-LIBS += -lvorbisfile
-LIBS += -ltheora
-LIBS += -ltheoraenc
-LIBS += -ltheoradec
-LIBS += -lx264
-LIBS += -lz
-LIBS += -lvdpau
-LIBS += -lva
-
-DISTFILES += \
-    VerzióInfó.txt \
-    LICENSE
 
