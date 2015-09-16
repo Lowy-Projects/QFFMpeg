@@ -15,15 +15,22 @@ public:
 
     double  value() const;
     float   valueFloat() const;
-    void    value(void *av_Rational);
 
-    void    setValue(void *av_Rational);
     void    setValue(int Num, int Den);
     void    setValue(double rat);
 
     bool    isValid();
     bool    mathEqual(ffRational &a) const;
 
+/************************************
+ * ffMpeg kapcsolattartó fügvények
+ ************************************/
+    void    ffMpegValue(void *av_Rational);
+    void    set_ffMpegValue(void *av_Rational);
+
+/**********************
+ * Operátorok
+ **********************/
     friend bool    operator == (ffRational &a, ffRational &b);
     friend bool    operator != (ffRational &a, ffRational &b);
 

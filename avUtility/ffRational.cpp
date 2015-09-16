@@ -9,7 +9,7 @@ ffRational::ffRational()
 
 ffRational::ffRational(void *av_Rational)
 {
-    setValue(av_Rational);
+    set_ffMpegValue(av_Rational);
 }
 
 ffRational::ffRational(int Num, int Den)
@@ -38,7 +38,7 @@ float ffRational::valueFloat() const
     return m_num / (float)m_den;
 }
 
-void ffRational::value(void *av_Rational)
+void ffRational::ffMpegValue(void *av_Rational)
 {
     AVRational *r = (AVRational*)av_Rational;
 
@@ -49,7 +49,7 @@ void ffRational::value(void *av_Rational)
     r->den = m_den;
 }
 
-void ffRational::setValue(void *av_Rational)
+void ffRational::set_ffMpegValue(void *av_Rational)
 {
     AVRational *r = (AVRational*)av_Rational;
 
