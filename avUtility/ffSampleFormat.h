@@ -16,16 +16,23 @@ public:
     void      setBits(int bits)                {m_Bits = bits;}
     void      setPlanar(bool isPlanar) {m_Planar = isPlanar;}
     void      setFloat(bool isFloat)      {m_Float = isFloat;}
-    void      setFfMpegSampleFmt(int SampleFmt);
 
-    int           toFfMpegSampleFmt();
-    QString  toString(bool showPlanar = false);
+    QString   toString(bool showPlanar = false);
 
-    static int           Bits(int ffMpeg_SampleFormat);
+    static int          Bits(int ffMpeg_SampleFormat);
     static bool         Planar(int ffMpeg_SampleFormat);
     static bool         Float(int ffMpeg_SampleFormat);
-    static QString  toString(int ffMpeg_SampleFormat, bool showPlanar = false);
+    static QString      toString(int ffMpeg_SampleFormat, bool showPlanar = false);
 
+/************************************
+ * ffMpeg kapcsolattartó fügvények
+ ************************************/
+    void      set_ffMpegValue(int SampleFmt);
+    int       ffMpegValue();
+
+/****************************
+ * Operátorok
+ ****************************/
     bool    operator ==(ffSampleFormat& f);
     bool    operator != (ffSampleFormat& f);
 

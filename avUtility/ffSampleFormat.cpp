@@ -34,10 +34,10 @@ ffSampleFormat::ffSampleFormat()
 
 ffSampleFormat::ffSampleFormat(int ffMpeg_SampleFormat)
 {
-    setFfMpegSampleFmt(ffMpeg_SampleFormat);
+    set_ffMpegValue(ffMpeg_SampleFormat);
 }
 
-void ffSampleFormat::setFfMpegSampleFmt(int SampleFmt)
+void ffSampleFormat::set_ffMpegValue(int SampleFmt)
 {
     int i = 0;
     m_Bits = -1;
@@ -56,7 +56,7 @@ void ffSampleFormat::setFfMpegSampleFmt(int SampleFmt)
     }
 }
 
-int ffSampleFormat::toFfMpegSampleFmt()
+int ffSampleFormat::ffMpegValue()
 {
     int i = 0;
 
