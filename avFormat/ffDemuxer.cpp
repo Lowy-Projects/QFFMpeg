@@ -139,10 +139,10 @@ ffChapterModel* ffDemuxer::Chapter()
                                 * chapterModel2 = new ffChapterModel(this);
 AVChapter *chapters;
 
-    chapterModel2->appendAvChapter((void**)m_fCtx->chapters, m_fCtx->nb_chapters);
+    chapterModel2->append_ffMpegAvChapter((void**)m_fCtx->chapters, m_fCtx->nb_chapters);
 
     chapterModel2->chapters((void**)&chapters);
-    chapterModel->appendAvChapter((void**)&chapters, m_fCtx->nb_chapters);
+    chapterModel->append_ffMpegAvChapter((void**)&chapters, m_fCtx->nb_chapters);
     delete chapterModel2;
     av_free(chapters);
 Log << "AVChapter tömb létrehozási test tőrlendő!!";

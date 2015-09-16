@@ -23,7 +23,7 @@ ffChapter::ffChapter(void *av_Chapter, QObject *parent): QObject(parent)
     m_ChapterId = chapter->id;
     m_Start.setValue(chapter->start, ffRational(&chapter->time_base));
     m_End.setValue(chapter->end, ffRational(&chapter->time_base));
-    m_Metadata.setValue(chapter->metadata);
+    m_Metadata.set_ffMpegValue(chapter->metadata);
 }
 
 ffChapter::~ffChapter()

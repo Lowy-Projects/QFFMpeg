@@ -171,7 +171,7 @@ ffRational ffStream::PictureRatio()
 {
     ffRational aspRatio;
 
-    aspRatio.setValue(&m_pAVStream->display_aspect_ratio);
+    aspRatio.set_ffMpegValue(&m_pAVStream->display_aspect_ratio);
 
     if (! aspRatio.isValid())
     {

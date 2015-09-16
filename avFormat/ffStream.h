@@ -3,7 +3,7 @@
 
 #include "qffmpeg_global.h"
 #include "avUtility/avUtility"
-#include <LowyLib.h>
+#include <LowyLib/LowyLib.h>
 #include <QObject>
 
 class QFFMPEGSHARED_EXPORT ffStream : public QObject

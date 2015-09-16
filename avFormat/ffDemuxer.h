@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QList>
 #include <QFileInfo>
-#include <LowyLib.h>
+#include <LowyLib/LowyLib.h>
 #include "qffmpeg_global.h"
 
 #include "ffStream.h"
