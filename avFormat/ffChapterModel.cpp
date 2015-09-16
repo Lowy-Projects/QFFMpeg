@@ -19,7 +19,7 @@ void ffChapterModel::appendChapter(ffChapter *chapter)
     endInsertRows();
 }
 
-void ffChapterModel::appendAvChapter(void **av_Chapter, int count)
+void ffChapterModel::append_ffMpegAvChapter(void **av_Chapter, int count)
 {
     beginInsertRows(QModelIndex(), m_List.count(), m_List.count() + count - 1);
     for(int i = 0; i < count; i++)
@@ -44,7 +44,7 @@ void ffChapterModel::insertChapter(int num, ffChapter *chapter)
     endInsertRows();
 }
 
-void ffChapterModel::insertAvChapter(void **av_Chapter, int first, int count)
+void ffChapterModel::insert_ffMpegAvChapter(void **av_Chapter, int first, int count)
 {
     if (first >= m_List.count())
         first = m_List.count();
@@ -120,8 +120,8 @@ bool ffChapterModel::chapters(void **av_Chapters)
         chapters[i].end   = chapter->End().Value();
         chapters[i].id      = chapter->ChapterNum();
 
-        chapter->Start().TimeBase().value(&chapters[i].time_base);
-        chapter->MetadataModel()->Value((void**)& chapters[i].metadata);
+        chapter->Start().TimeBase().ffMpegValue(&chapters[i].time_base);
+        chapter->MetadataModel()->ffMpegValue((void**)& chapters[i].metadata);
     }
 
     return true;

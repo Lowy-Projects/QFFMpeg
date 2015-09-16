@@ -19,9 +19,7 @@ public:
 
     // Fejezet (Chapter) tagfügvények
     void              appendChapter(ffChapter* chapter);
-    void              appendAvChapter(void **av_Chapter, int count);
     void              insertChapter(int num, ffChapter* chapter);
-    void              insertAvChapter(void **av_Chapter, int first, int count);
     void              changeChapterStart(int num, ffTimeStamp start);
     void              changeChapterStart(ffChapter *chapter, ffTimeStamp start);
     void              changeChapterEnd(int num, ffTimeStamp end);
@@ -42,12 +40,16 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
 
+    // ffMpeg kapcsolattartó függvények
+    void    append_ffMpegAvChapter(void **av_Chapter, int count);
+    void    insert_ffMpegAvChapter(void **av_Chapter, int first, int count);
+
     signals:
     void    chapterNameChanged(ffChapter* item);
 
 private:
     QString chapterData(int row, int colum) const;
-    int          chapterNum(ffChapter *chapter);
+    int     chapterNum(ffChapter *chapter);
 
     QList<ffChapter*>   m_List;
     ffChapterDelegat*   m_Delegat;
