@@ -8,7 +8,7 @@ QT += core gui
 QT += widgets
 
 QMAKE_CXXFLAGS += -D__STDC_CONSTANT_MACROS
-QMAKE_LFLAGS += -Wl,-Bsymbolic
+#QMAKE_LFLAGS += -Wl,-Bsymbolic
 
 TARGET = QFFMpeg
 TEMPLATE = lib
@@ -16,79 +16,8 @@ VERSION = 0.1.10
 
 DEFINES += QFFMPEG_LIBRARY
 
-unix {
-# ffmpeg és kódek könyvtárak
-        FFMPEG_LIB = /usr/local/lib
-        FFMPEG_INCLUDE = /usr/local/include
-        CODEC_LIB = /usr/local/lib
-        CODEC_INCLUDE = /usr/local/include
+unix: include(linux.pro)
 
-# Telepítési beállítások
-    header_files.files = $$PWD/*.h
-    header_files.files += $$PWD/qffmpeg
-    header_files.path = /usr/include/QFFMpeg
-    INSTALLS += header_files
-
-    header_avFormat.files = $$PWD/avFormat/*.h
-    header_avFormat.files += $$PWD/avFormat/avFormat
-    header_avFormat.path = /usr/include/QFFMpeg/avFormat
-    INSTALLS += header_avFormat
-
-    header_avUtility.files = $$PWD/avUtility/*.h
-    header_avUtility.files += $$PWD/avUtility/avUtility
-    header_avUtility.path = /usr/include/QFFMpeg/avUtility
-    INSTALLS += header_avUtility
-
-    target.path = /usr/lib
-    INSTALLS += target
-
-}
-
-# ffmpeg könyvtárak
-FFMPEG_FILES = \
-        -lavformat \
-        -lavcodec  \
-        -lavdevice \
-        -lavfilter   \
-        -lavutil      \
-        -lpostproc \
-        -lswresample \
-        -lswscale
-
-FFMPEG_LIB_NAMES = \
-        $$FFMPEG_LIB/libavformat.a      \
-        $$FFMPEG_LIB/libavcodec.a        \
-        $$FFMPEG_LIB/libavdevice.a       \
-        $$FFMPEG_LIB/libavfilter.a          \
-        $$FFMPEG_LIB/libavutil.a            \
-        $$FFMPEG_LIB/libpostproc.a      \
-        $$FFMPEG_LIB/libswresample.a \
-        $$FFMPEG_LIB/libswscale.a
-
-
-#ffmpeg statikus kódekek
-CODEC_FILES = \
-        -lmp3lame \
-        -lfdk-aac     \
-        -lvpx
-
-CODEC_LIB_NAMES = \
-        $$CODEC_LIB/libmp3lame.a \
-        $$CODEC_LIB/libfdk-aac.a     \
-        $$CODEC_LIB/libvpx.a
-
-# ffmpeg shared kódekek
-LIBS += -lvorbis
-LIBS += -lvorbisenc
-LIBS += -lvorbisfile
-LIBS += -ltheora
-LIBS += -ltheoraenc
-LIBS += -ltheoradec
-LIBS += -lx264
-LIBS += -lx265
-LIBS += -lz
-LIBS += -lvdpau
-LIBS += -lva
 
 # QFFMpeg forráskódok
 SOURCES += \
@@ -105,7 +34,8 @@ SOURCES += \
     avFormat/ffAudioStream.cpp \
     avFormat/ffSubtitleStream.cpp \
     avFormat/ffDataStream.cpp \
-    avUtility/ffSampleFormat.cpp
+    avUtility/ffSampleFormat.cpp \
+    avUtility/ffdictionaryitem.cpp
 
 HEADERS += \
         qffmpeg_global.h \
@@ -125,37 +55,39 @@ HEADERS += \
     avFormat/ffAudioStream.h \
     avFormat/ffSubtitleStream.h \
     avFormat/ffDataStream.h \
-    avUtility/ffSampleFormat.h
+    avUtility/ffSampleFormat.h \
+    avUtility/ffdictionaryitem.h
 
 DISTFILES += \
     VerzióInfó.txt \
-    LICENSE
+    LICENSE \
+    Állapot
 
 LIBS += -L$$FFMPEG_LIB
 LIBS += $$FFMPEG_FILES
-PRE_TARGETDEPS += $$FFMPEG_LIB_NAMES
+#PRE_TARGETDEPS += $$FFMPEG_LIB_NAMES
 
 LIBS += -L$$CODEC_LIB
 LIBS += $$CODEC_FILES
-PRE_TARGETDEPS += $$CODEC_LIB_NAMES
+#PRE_TARGETDEPS += $$CODEC_LIB_NAMES
 
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../build/LowyLib/Release -lLowyLib
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../build/LowyLib/Debug/ -lLowyLib
-else:unix:!macx: LIBS += -L$$PWD/../build/LowyLib/Debug/ -lLowyLib
+else:unix:!macx: LIBS += -L$$HOME/lib -lLowyLib
 
-INCLUDEPATH += $$PWD/../LowyLib
-DEPENDPATH += $$PWD/../LowyLib
+INCLUDEPATH += $$HOME/include
+DEPENDPATH += $$HOME/LowyLib
 
 win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../build/LowyLib/Release/libLowyLib.a
 else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../build/LowyLib/Debug/libLowyLib.a
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../build/LowyLib/Release/LowyLib.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../build/LowyLib/Debug/LowyLib.lib
-else:unix:!macx: PRE_TARGETDEPS += $$PWD/../build/LowyLib/Debug/libLowyLib.a
+else:unix:!macx: PRE_TARGETDEPS += $$HOME/lib/libLowyLib.a
 
-#INCLUDEPATH += $$FFMPEG_INCLUDE
+INCLUDEPATH += $$FFMPEG_INCLUDE
 #DEPENDPATH +=  $$FFMPEG_INCLUDE
-#INCLUDEPATH += $$CODEC_INCLUDE
+INCLUDEPATH += $$CODEC_INCLUDE
 #DEPENDPATH +=  $$CODEC_INCLUDE
 
 
@@ -262,4 +194,7 @@ win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmp
 else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/libx265.a
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/release/x265.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../lib-ffmpeg/lib/debug/x265.lib
+
+#SUBDIRS += \
+#    linux.pro
 
