@@ -1,7 +1,7 @@
 #include "ffTimeStamp.h"
 #include "ffRational.h"
 #include "libavutil/mathematics.h"
-#include "LowyLib.h"
+#include <LowyLib/LowyLib.h>
 
 ffTimeStamp::ffTimeStamp()
 {
@@ -32,8 +32,8 @@ void ffTimeStamp::setValue(qint64 TimeStamp, ffRational TimeBase)
 {
     AVRational rat;
 
-    TimeBase.value(&rat);
-    timeBase.setValue(&rat);     // .setValue(TimeBase.num, TimeBase.den);
+    TimeBase.ffMpegValue(&rat);
+    timeBase.set_ffMpegValue(&rat);     // .setValue(TimeBase.num, TimeBase.den);
     t = TimeStamp;
 }
 
@@ -47,8 +47,8 @@ void ffTimeStamp::add(qint64 TimeStamp, ffRational TimeBase)
 {
     AVRational aRat, bRat;
 
-    timeBase.value(&aRat);
-    TimeBase.value(&bRat);
+    timeBase.ffMpegValue(&aRat);
+    TimeBase.ffMpegValue(&bRat);
 
     if (timeBase != TimeBase)
         TimeStamp = av_rescale_q(TimeStamp, bRat, aRat);        // Időbélyeg átalakítás az osztály által használt időbázisra.
@@ -69,8 +69,8 @@ void ffTimeStamp::sub(qint64 TimeStamp, ffRational TimeBase)
 {
     AVRational aRat, bRat;
 
-    timeBase.value(&aRat);
-    TimeBase.value(&bRat);
+    timeBase.ffMpegValue(&aRat);
+    TimeBase.ffMpegValue(&bRat);
 
     if (timeBase != TimeBase)
         TimeStamp = av_rescale_q(TimeStamp, bRat, aRat);        // Időbélyeg átalakítás az osztály által használt időbázisra.
@@ -99,11 +99,11 @@ void ffTimeStamp::rescaleTimeStamp(ffRational TimeBase)
 {
     AVRational oldR, newR;
 
-    timeBase.value(&oldR);
-    TimeBase.value(&newR);
+    timeBase.ffMpegValue(&oldR);
+    TimeBase.ffMpegValue(&newR);
 
     t = av_rescale_q(t, oldR, newR);                    // ffMpeg funkció, az átszámításra.
-    timeBase.setValue(&newR);
+    timeBase.set_ffMpegValue(&newR);
 }
 
 double ffTimeStamp::toSec()
