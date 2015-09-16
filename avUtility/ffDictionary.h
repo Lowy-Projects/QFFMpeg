@@ -7,8 +7,8 @@
 #include <QStandardItemModel>
 #include <QList>
 #include <QPair>
-#include <LowyLib.h>
-//#include <QMap>
+#include <LowyLib/LowyLib.h>
+#include "ffdictionaryitem.h"
 
 class QFFMPEGSHARED_EXPORT ffDictionaryModel : public QObject
 {
@@ -20,31 +20,39 @@ public:
 
     void     Add(QString key, QString value);
     void     Clear();
-    int       Count() {return m_Dic.rowCount();}
+    int      Count() {return m_Dic.rowCount();}
     QString  Value(QString key, bool isSensitive = true);
-    void         Value(void  **FFMpeg_Dict);
 
     QStandardItemModel*     Model() {return &m_Dic;}
 
     QList<QPair<QString, QString> > List();
-    void                    setValue(void * FFMpeg_Dict);
     void                    setValue(QString key, QString value);
     void                    setFromList(QList<QPair<QString, QString> >list);
     void                    addFromList(QList<QPair<QString, QString> > list);
 
+/***********************************
+ * ffMpeg kapcsolattartó fügvények.
+ ***********************************/
+    void     ffMpegValue(void  **FFMpeg_Dict);
+    void     set_ffMpegValue(void * FFMpeg_Dict);
+
+/***********************************
+* Operátorok
+***********************************/
+
     QString operator[] (QString key);
+
 signals:
 
 public slots:
 
 private:
-    bool                                            InsertRow(QString s1, QString s2);
+    bool                        InsertRow(QString s1, QString s2);
     QPair<QString, QString>     valuePair(int num);
-    QStandardItem                      *valueItem(QString key,  bool isSensitive = true);
+    QStandardItem               *valueItem(QString key,  bool isSensitive = true);
 
-//    QMap<QString, QString>      m_Dic;
     QStandardItemModel          m_Dic;
-    lError                                     m_Error;
+    lError                      m_Error;
 };
 
 #endif // FFDICTIONARY_H

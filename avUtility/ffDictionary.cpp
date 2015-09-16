@@ -2,14 +2,6 @@
 #include <QDebug>
 #include "ffDictionary.h"
 
-extern "C"
-{
-    struct AVDictionary
-    {
-        int                count;
-        AVDictionaryEntry *elems;
-    };
-}
 
 ffDictionaryModel::ffDictionaryModel(QObject *parent) : QObject(parent)
 {
@@ -19,7 +11,7 @@ ffDictionaryModel::ffDictionaryModel(QObject *parent) : QObject(parent)
 
 ffDictionaryModel::ffDictionaryModel(void *FFMpeg_Dict, QObject *parent) : QObject(parent)
 {
-    setValue(FFMpeg_Dict);
+    set_ffMpegValue(FFMpeg_Dict);
 }
 
 ffDictionaryModel::~ffDictionaryModel()
@@ -48,7 +40,7 @@ QString ffDictionaryModel::Value(QString key, bool isSensitive)
     return QString();
 }
 
-void ffDictionaryModel::Value(void **FFMpeg_Dict)
+void ffDictionaryModel::ffMpegValue(void **FFMpeg_Dict)
 {
     QPair<QString, QString> item;
     AVDictionary                        **dict = (AVDictionary**)FFMpeg_Dict;
@@ -72,7 +64,7 @@ QList<QPair<QString, QString> > ffDictionaryModel::List()
     return list;
 }
 
-void ffDictionaryModel::setValue(void *FFMpeg_Dict)
+void ffDictionaryModel::set_ffMpegValue(void *FFMpeg_Dict)
 {
     AVDictionary       *ffDic = (AVDictionary*)FFMpeg_Dict;
     AVDictionaryEntry  *entrys = ffDic->elems;
