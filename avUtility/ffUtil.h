@@ -10,8 +10,8 @@ public:
     ffUtil();
 
     static QList<QString >  getProfiles(void *codec);
-    static QString                   getProfileName(void * codec, int profileId);
-    static int                            getProfileId(void * codec, QString name);
+    static QString          getProfileName(void * codec, int profileId);
+    static int              getProfileId(void * codec, QString name);
 
 };
 
