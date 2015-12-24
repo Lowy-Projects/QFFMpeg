@@ -42,9 +42,9 @@ bool ffDictionaryItem::isError()
     return m_Error.isError();
 }
 
-lError *ffDictionaryItem::Error()
+lError &ffDictionaryItem::Error()
 {
-    return &m_Error;
+    return m_Error;
 }
 
 void ffDictionaryItem::setValue(QString value)

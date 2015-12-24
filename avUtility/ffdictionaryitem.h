@@ -13,7 +13,7 @@ public:
 
     bool isOK();
     bool isError();
-    lError* Error();
+    lError& Error();
 
     void setValue(QString key, QString value);
     void setValue(QString value);
