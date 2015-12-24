@@ -45,7 +45,7 @@ ffTimeStamp ffChapter::Length()
 
 QString ffChapter::Value()
 {
-    return m_Metadata.Value("title");
+    return m_Metadata.value("title");
 }
 
 void ffChapter::setStart(ffTimeStamp Start)

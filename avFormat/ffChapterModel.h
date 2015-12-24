@@ -7,7 +7,7 @@
 #include "qffmpeg_global.h"
 #include "ffChapter.h"
 
-class ffChapterDelegat;
+class ffChapterDelegate;
 
 class QFFMPEGSHARED_EXPORT ffChapterModel : public QAbstractTableModel
 {
@@ -29,7 +29,7 @@ public:
     ffChapter   *chapter(int num);
     bool             chapters(void **av_Chapters);
     QList<ffChapter*>&chapters() {return m_List;}
-    ffChapterDelegat *delegat() {return m_Delegat;}
+    ffChapterDelegate*delegate() {return m_Delegate;}
 
     // Model tagfügvények
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE ;
@@ -52,18 +52,18 @@ private:
     int     chapterNum(ffChapter *chapter);
 
     QList<ffChapter*>   m_List;
-    ffChapterDelegat*   m_Delegat;
+    ffChapterDelegate*  m_Delegate;
 };
 
 ///
 /// Delegát osztály a fejezet nevének modosításához
 ///
-class ffChapterDelegat : public QStyledItemDelegate
+class ffChapterDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 
 public:
-    ffChapterDelegat(QObject * parent = 0);
+    ffChapterDelegate(QObject * parent = 0);
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
                               const QModelIndex &index) const Q_DECL_OVERRIDE;

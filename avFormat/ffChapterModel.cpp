@@ -3,13 +3,13 @@
 
 ffChapterModel::ffChapterModel(QObject *parent): QAbstractTableModel(parent)
 {
-    m_Delegat = new ffChapterDelegat(this);
+    m_Delegate = new ffChapterDelegate(this);
 }
 
 ffChapterModel::~ffChapterModel()
 {
-    if (m_Delegat)
-        delete m_Delegat;
+    if (m_Delegate)
+        delete m_Delegate;
 }
 
 void ffChapterModel::appendChapter(ffChapter *chapter)
@@ -274,12 +274,12 @@ int ffChapterModel::chapterNum(ffChapter *chapter)
 //////////////////////////////////
 /// Delegát osztály megvalósítása
 //////////////////////////////////
-ffChapterDelegat::ffChapterDelegat(QObject *parent) :
+ffChapterDelegate::ffChapterDelegate(QObject *parent) :
     QStyledItemDelegate(parent)
 {
 }
 
-QWidget *ffChapterDelegat::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+QWidget *ffChapterDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
 //    Q_UNUSED(option);
 
@@ -299,7 +299,7 @@ QWidget *ffChapterDelegat::createEditor(QWidget *parent, const QStyleOptionViewI
     return editor;
 }
 
-void ffChapterDelegat::setEditorData(QWidget *editor, const QModelIndex &index) const
+void ffChapterDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
 {
     QString value = index.model()->data(index, Qt::EditRole).toString();
     QLineEdit* lineEditor = static_cast<QLineEdit*>(editor);
@@ -307,14 +307,14 @@ void ffChapterDelegat::setEditorData(QWidget *editor, const QModelIndex &index) 
     lineEditor->setText(value);
 }
 
-void ffChapterDelegat::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+void ffChapterDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
     QLineEdit* lineEditor = static_cast<QLineEdit*>(editor);
 
     model->setData(index, lineEditor->text(), Qt::EditRole);
 }
 
-void ffChapterDelegat::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void ffChapterDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     Q_UNUSED(index)
 
